@@ -1,0 +1,16 @@
+<section class="signup-form">
+  <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" [formGroup]="loginForm">
+
+    <mat-form-field>
+      <input matInput type="email" formControlName="email" placeholder="email" required>
+      <mat-error *ngIf="loginForm.get('email').invalid">Email is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input  matInput type="password" formControlName="password" placeholder="password" required>
+        <mat-error *ngIf="loginForm.get('password').invalid">Password is required</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" [disabled]="!loginForm.valid">Confirm</button>
+  </form>
+</section>

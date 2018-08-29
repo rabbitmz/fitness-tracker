@@ -1,3 +1,7 @@
+import { TrainingService } from './../training.service';
+import { Exercise } from './../exercise.model';
+import { Subscription } from 'rxjs/Subscription';
+import { AuthService } from './../../auth/auth.service';
 import { StopTrainingComponent } from './StopTrainingComponent';
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { MatDialog } from '@angular/material';
@@ -14,9 +18,14 @@ export class CurrentTrainingComponent implements OnInit {
 
   progress = 0;
   timer;
+  authSubscription: Subscription;
+  ex: Exercise;
 
-  constructor(public dialog: MatDialog) {
 
+  constructor(public dialog: MatDialog, private trainingService: TrainingService) {
+    this.authSubscription = this.trainingService.exerciseChanged.subscribe(e => {
+      this.ex = e;
+    });
   }
 
   ngOnInit() {
@@ -24,12 +33,13 @@ export class CurrentTrainingComponent implements OnInit {
   }
 
   startOrResumeTimer() {
+    const step = this.trainingService.getRunningExercise().duration / 100 * 1000;
     this.timer =  setInterval(() => {
       this.progress = this.progress + 5;
       if (this.progress >= 100) {
         clearInterval(this.timer);
       }
-    }, 1000);
+    }, step);
   }
 
   emitStopTraining() {
@@ -45,10 +55,6 @@ export class CurrentTrainingComponent implements OnInit {
       } else {
         this.startOrResumeTimer();
       }
-
     });
-
-
-
   }
 }
